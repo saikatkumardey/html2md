@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Convert any HTML page (URL or file) to clean, agent-friendly markdown",
   "type": "module",
-  "main": "bin/html2md.js",
+  "main": "./html2md.js",
   "bin": {
-    "html2md": "bin/html2md.js"
+    "html2md": "./html2md.js"
   },
   "scripts": {
-    "test": "node bin/html2md.js --help"
+    "test": "node html2md.js --help"
   },
   "keywords": ["html", "markdown", "converter", "cli"],
   "author": "",

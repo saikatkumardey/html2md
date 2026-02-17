@@ -1,33 +1,33 @@
 ---
 name: html2md
-description: Convert HTML pages to clean, agent-friendly markdown using Readability + Turndown. Use when an agent needs to read web pages with minimal token waste — strips navigation, ads, footers, cookie banners, social CTAs. Supports URL fetch, local files, stdin, token budgeting, and output control flags. Ideal for research tasks, content extraction, and web scraping in agent workflows.
+description: Convert HTML pages to clean, agent-friendly markdown using Readability + Turndown. Strips navigation, ads, footers, cookie banners, social CTAs. Supports URL fetch, local files, stdin, token budgeting, and output flags. Ideal for research tasks, content extraction, and web scraping in agent workflows.
 ---
 
 # html2md
 
-Aggressive HTML-to-markdown converter for AI agents. Two-pass extraction: Mozilla Readability isolates main content, Turndown converts to markdown, then heavy post-processing strips remaining noise.
+Aggressive HTML-to-markdown converter for AI agents. Mozilla Readability isolates main content, Turndown converts to markdown, then heavy post-processing strips remaining noise.
+
+> Full flag reference and advanced examples: `references/usage.md`
 
 ## Setup
 
 ```bash
 cd <skill-dir>/scripts
 npm install
-npm link  # makes `html2md` globally available
+npm link        # makes `html2md` globally available
 ```
 
 Requires Node.js 22+.
 
-## Usage
+## Quick Start
 
 ```bash
-html2md <url>                     # fetch + convert
-html2md --file <path>             # local HTML file
-cat page.html | html2md --stdin   # pipe from stdin
-html2md --max-tokens 2000 <url>   # budget-aware truncation
-html2md --no-tables <url>         # tables → bullet lists
-html2md --no-links <url>          # strip hrefs, keep text
-html2md --no-images <url>         # remove image references
-html2md --json <url>              # JSON output: {title, url, markdown, tokens}
+html2md https://example.com                    # fetch + convert
+html2md --file page.html                       # local HTML file
+cat page.html | html2md --stdin                # pipe from stdin
+html2md --max-tokens 2000 https://example.com  # budget-aware truncation
+html2md --no-links https://example.com         # strip hrefs, keep text
+html2md --json https://example.com             # JSON: {title, url, markdown, tokens}
 ```
 
 ## Key Features
@@ -36,28 +36,29 @@ html2md --json <url>              # JSON output: {title, url, markdown, tokens}
 - **Token budgeting** — `--max-tokens N` keeps all headings, fills remaining budget in document order, appends `[truncated — N more tokens]`. Uses 1 token ≈ 4 chars heuristic.
 - **Post-processing** — strips HTML comments, zero-width chars, social CTAs, breadcrumbs, empty headings, collapses excess blank lines.
 - **Error handling** — bad URLs, timeouts (15s), non-HTML content, missing files all exit code 1 with descriptive stderr.
+- **Output modes** — plain markdown or `--json` for programmatic use.
 
-## When to Use Instead of web_fetch
+## When to Use vs `web_fetch`
 
-Use `html2md` when:
-- Reading web pages in cron jobs or sub-agents (cleaner output, fewer tokens)
-- Token budget matters (use `--max-tokens`)
-- Page has heavy navigation/ads that web_fetch doesn't strip well
-- You need JSON output for programmatic use
+| Use `html2md` when | Use `web_fetch` when |
+|-------------------|---------------------|
+| Reading pages in cron jobs / sub-agents | Quick one-off fetch in main session |
+| Token budget matters (`--max-tokens`) | Page is a JSON/XML API endpoint |
+| Heavy nav/ads/footers to strip | JS rendering not needed |
+| Need JSON output | Simple pages |
 
 ## Examples
 
-Read a Paul Graham essay within 2000 tokens:
 ```bash
+# Read a Paul Graham essay within 2000 tokens
 html2md --max-tokens 2000 https://paulgraham.com/greatwork.html
-```
 
-Read HN front page as clean text (no links):
-```bash
-html2md --no-links https://news.ycombinator.com
-```
+# HN front page as clean text, no link noise
+html2md --no-links --no-images https://news.ycombinator.com
 
-Get structured output:
-```bash
+# Get token count before committing
 html2md --json https://example.com | jq .tokens
+
+# Pipe to file
+html2md https://docs.example.com/api > api-docs.md
 ```
