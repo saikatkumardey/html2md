@@ -135,9 +135,11 @@ done
 
 ### Use in Node.js scripts
 ```js
-import { execSync } from 'child_process';
-const md = execSync(`html2md --max-tokens 2000 ${url}`).toString();
+import { execFileSync } from 'child_process';
+const md = execFileSync('html2md', ['--max-tokens', '2000', url]).toString();
 ```
+
+Note: Always use `execFileSync` (not `execSync`) to avoid shell injection when the URL comes from untrusted input.
 
 ## Error Handling
 

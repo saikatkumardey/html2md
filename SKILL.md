@@ -47,6 +47,16 @@ html2md --json https://example.com             # JSON: {title, url, markdown, to
 | Heavy nav/ads/footers to strip | JS rendering not needed |
 | Need JSON output | Simple pages |
 
+## Security Considerations
+
+html2md fetches URLs and reads local files — that's its job. If you're passing untrusted input:
+
+- **URL fetching**: the tool will fetch whatever URL it's given. Don't pass user-controlled URLs without validation if your threat model includes SSRF.
+- **File reading**: `--file` reads any path the process can access. In agent workflows, the agent controls the path — this is equivalent to the agent using `cat`.
+- **No shell execution**: the tool itself never spawns shells or runs commands. When calling from scripts, use `execFileSync` (not `execSync`) to avoid shell injection.
+- **No data exfiltration**: output goes to stdout only. No network requests beyond the single URL fetch. No telemetry, no analytics, no phone-home.
+- **Dependencies**: jsdom (Mozilla DOM implementation), Readability (Mozilla content extractor), Turndown (HTML→markdown). All widely audited, open source libraries.
+
 ## Examples
 
 ```bash
