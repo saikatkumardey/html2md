@@ -10,9 +10,9 @@
   "scripts": {
     "test": "node html2md.js --help"
   },
-  "keywords": ["html", "markdown", "converter", "cli"],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["html", "markdown", "converter", "cli", "agent"],
+  "author": "Saikat Kumar Dey <deysaikatkumar@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "@mozilla/readability": "^0.6.0",
     "jsdom": "^28.1.0",

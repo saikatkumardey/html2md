@@ -1,6 +1,7 @@
 ---
 name: html2md
-description: Convert HTML pages to clean, agent-friendly markdown using Readability + Turndown. Strips navigation, ads, footers, cookie banners, social CTAs. Supports URL fetch, local files, stdin, token budgeting, and output flags. Ideal for research tasks, content extraction, and web scraping in agent workflows.
+description: Convert HTML pages to clean, agent-friendly markdown using Readability + Turndown. Strips navigation, ads, footers, cookie banners, social CTAs. Supports URL fetch, local files, stdin, token budgeting, and output flags. Use when fetching web pages for research, content extraction, or scraping in agent workflows — especially when token budget matters or pages have heavy boilerplate.
+allowed-tools: Bash(html2md:*)
 ---
 
 # html2md
@@ -9,15 +10,21 @@ Aggressive HTML-to-markdown converter for AI agents. Mozilla Readability isolate
 
 > Full flag reference and advanced examples: `references/usage.md`
 
-## Setup
+## Install as a Claude Code skill
 
 ```bash
-cd <skill-dir>/scripts
-npm install
-npm link        # makes `html2md` globally available
+git clone https://github.com/saikatkumardey/html2md ~/.claude/skills/html2md
+cd ~/.claude/skills/html2md/scripts && npm install && npm link
 ```
 
-Requires Node.js 22+.
+Requires Node.js 22+. The `npm link` step makes `html2md` available globally on PATH.
+
+## Install as a standalone CLI (no skill needed)
+
+```bash
+git clone https://github.com/saikatkumardey/html2md
+cd html2md/scripts && npm install && npm link
+```
 
 ## Quick Start
 
